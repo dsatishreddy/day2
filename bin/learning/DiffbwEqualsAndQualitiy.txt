@@ -1,0 +1,72 @@
+Operator	What it compares
+==	Memory reference (address)
+equals()	Content / logical equality
+1️⃣ == (reference comparison)
+
+== checks whether two variables point to the SAME object in memory.
+
+Example with Objects
+Employee e1 = new Employee(101, "Sathish");
+Employee e2 = new Employee(101, "Sathish");
+
+System.out.println(e1 == e2);
+
+Output ❌
+false
+
+
+👉 Because:
+
+e1 and e2 are two different objects
+
+Same data ≠ same memory
+
+2️⃣ equals() (content comparison)
+
+equals() checks whether two objects are logically equal
+(implementation depends on class).
+
+System.out.println(e1.equals(e2));
+
+Output depends on override
+
+❌ Without override → false
+
+✅ With proper override → true
+
+3️⃣ String example (very important)
+Case 1: String literal (String pool)
+String s1 = "Java";
+String s2 = "Java";
+
+System.out.println(s1 == s2);       // ?
+System.out.println(s1.equals(s2));  // ?
+
+Output ✅
+true
+true
+
+
+Why?
+
+String literals are stored in String Constant Pool
+
+Both point to same memory
+
+Case 2: Using new
+String s1 = new String("Java");
+String s2 = new String("Java");
+
+System.out.println(s1 == s2);
+System.out.println(s1.equals(s2));
+
+Output ❌✅
+false
+true
+
+
+Why?
+
+new creates separate objects
+
+equals() in String is overridden to compare content

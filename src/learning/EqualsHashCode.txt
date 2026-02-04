@@ -1,0 +1,159 @@
+Why do we even need equals() and hashCode()?
+
+In Java, when we create objects, Java does NOT know:
+
+when two objects should be treated as same
+
+and when they should be treated as different
+
+👉 That decision is your business logic.
+That’s why Java gives you:
+
+equals() → to say WHEN two objects are same
+
+hashCode() → to help Java store and find objects fast
+
+First: What problem are we solving?
+Simple real-life problem
+
+You are storing Student records in a HashSet.
+
+Rule:
+
+A student is unique by rollNo
+
+Case 1: WITHOUT equals() and hashCode()
+Student class
+class Student {
+    int rollNo;
+    String name;
+
+    Student(int rollNo, String name) {
+        this.rollNo = rollNo;
+        this.name = name;
+    }
+}
+
+Main program
+import java.util.HashSet;
+
+public class Test {
+    public static void main(String[] args) {
+
+        Student s1 = new Student(1, "Ravi");
+        Student s2 = new Student(1, "Ravi");
+
+        HashSet<Student> set = new HashSet<>();
+        set.add(s1);
+        set.add(s2);
+
+        System.out.println(set.size());
+    }
+}
+
+Output ❌
+2
+
+Why this is wrong?
+
+Data is same
+
+But Java sees two different objects in memory
+
+Default equals() → compares memory
+
+Default hashCode() → different numbers
+
+Case 2: WITH equals() and hashCode()
+
+Now we tell Java:
+
+Two students are same if their rollNo is same
+
+Correct Student class
+class Student {
+    int rollNo;
+    String name;
+
+    Student(int rollNo, String name) {
+        this.rollNo = rollNo;
+        this.name = name;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+
+        Student other = (Student) obj;
+        return this.rollNo == other.rollNo;
+    }
+
+    @Override
+    public int hashCode() {
+        return rollNo;
+    }
+}
+
+Same main program
+System.out.println(set.size());
+
+Output ✅
+1
+
+
+✔ Duplicate removed
+✔ Java understands logical equality
+
+How HashSet / HashMap uses them (VERY SIMPLE)
+
+When you add an object:
+
+Step 1
+
+hashCode() is called
+→ decides bucket
+
+Step 2
+
+If bucket has objects
+→ equals() is called
+→ checks duplicate
+
+hashCode() → WHERE to store
+equals()   → SAME or NOT
+
+Important rule (must remember)
+
+If equals() returns true
+then hashCode() must be same
+
+Otherwise collections break ❌
+
+Simple analogy 🏠
+Concept	Real life
+hashCode	House number
+equals	Person name
+
+Same person → same house number
+Different house number → never compared
+
+Where we actually use this in real projects
+
+✔ HashMap keys
+✔ HashSet
+✔ JPA / Hibernate entities
+✔ Removing duplicates
+✔ Caching
+
+Interview-ready one-liner ⭐
+
+equals() defines logical equality,
+hashCode() helps hash-based collections store and retrieve objects efficiently.
+Both must be overridden together.
+
+Final takeaway (easy)
+Method	Use
+equals()	Decide when objects are same
+hashCode()	Help Java find objects fast
+Both	Needed for HashMap / HashSet
